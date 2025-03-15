@@ -24,6 +24,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
+    "@types/express": "^5.0.0",
     "react-dom": "^19.0.0"
   }
 }
