@@ -17,13 +17,13 @@
   "license": "MIT",
   "description": "TSX express rendering engine",
   "devDependencies": {
+    "@types/react-dom": "^19.0.4",
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@types/react-dom": "^19.0.4",
     "react-dom": "^19.0.0"
   }
 }
