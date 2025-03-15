@@ -44,7 +44,7 @@ interface SetupOptions {
   viewPath?: string;
   errorView?: string;
   stream?: boolean;
-  publicPath?: string;
+  publicPath?: string | false;
   globalConfig?: Config;
 }
 
@@ -60,7 +60,7 @@ interface IntSetupOptions extends SetupOptions {
   templatePath: string;
   viewPath: string;
   stream: boolean;
-  publicPath: string;
+  publicPath: string | false;
   errorView: string;
 }
 
@@ -207,7 +207,11 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
   };
 
   app.use(middleware);
-  app.use(express.static(path.join(process.cwd(), intSetupOptions.publicPath)));
+  if (intSetupOptions.publicPath != false) {
+    app.use(
+      express.static(path.join(process.cwd(), intSetupOptions.publicPath))
+    );
+  }
 };
 
 interface CreateConfig {
