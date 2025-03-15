@@ -16,11 +16,10 @@ server.ts
 ```ts
 import extsx from "extsx";
 
-app.engine("tsx", extsx);
-app.set("view engine", "tsx");
+extsx.use(app);
 
 app.get("/hello/:name", (req, res, next) => {
-  res.render("hello", { name: req.params.name });
+  res.renderTsx("hello", { name: req.params.name });
 });
 ```
 
