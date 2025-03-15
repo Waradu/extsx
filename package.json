@@ -1,0 +1,26 @@
+{
+  "name": "reactexpress",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --watch index.ts",
+    "build": "bun build index.ts --outdir dist --target bun --minify",
+    "start": "bun run dist/index.js",
+    "db:push": "bun x prisma db push",
+    "deploy": "bun i && bun run db:push && bun run build && bun run start"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "express": "^4.21.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  }
+}
