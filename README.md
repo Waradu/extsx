@@ -1,11 +1,11 @@
-# Expretsx
+# Extsx
 
 TSX express rendering engine.
 
 ## install
 
 ```bash
-bun install expretsx
+bun install extsx
 bun install @types/react-dom
 ```
 
@@ -14,9 +14,9 @@ bun install @types/react-dom
 server.ts
 
 ```ts
-import expretsx from "expretsx";
+import extsx from "extsx";
 
-app.engine("tsx", expretsx);
+app.engine("tsx", extsx);
 app.set("view engine", "tsx");
 
 app.get("/hello/:name", (req, res, next) => {

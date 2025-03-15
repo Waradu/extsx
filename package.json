@@ -1,18 +1,19 @@
 {
-  "name": "expretsx",
+  "name": "extsx",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
   "version": "0.1.0",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "pub": "bun run build && bun publish"
   },
   "keywords": [
     "tsx",
     "express",
     "react"
   ],
-  "repository": "waradu/expretsx",
+  "repository": "waradu/extsx",
   "license": "MIT",
   "description": "TSX express rendering engine",
   "devDependencies": {
