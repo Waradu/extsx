@@ -1,6 +1,6 @@
 # Expretsx
 
-TSX express rendering engine
+TSX express rendering engine.
 
 ## install
 
