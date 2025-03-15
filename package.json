@@ -1,14 +1,21 @@
 {
-  "name": "reactexpress",
-  "module": "index.ts",
+  "name": "expretsx",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "version": "0.1.0",
   "scripts": {
-    "dev": "bun run --watch index.ts",
-    "build": "bun build index.ts --outdir dist --target bun --minify",
-    "start": "bun run dist/index.js",
-    "db:push": "bun x prisma db push",
-    "deploy": "bun i && bun run db:push && bun run build && bun run start"
+    "build": "bun build index.ts --outdir dist --target bun --mininfy && tsc",
+    "publish": "bun run build && bun publish"
   },
+  "keywords": [
+    "tsx",
+    "express",
+    "react"
+  ],
+  "repository": "waradu/expretsx",
+  "license": "MIT",
+  "description": "TSX express rendering engine",
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -16,11 +23,7 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@types/express": "^5.0.0",
-    "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "express": "^4.21.2",
-    "react": "^19.0.0",
     "react-dom": "^19.0.0"
   }
 }
