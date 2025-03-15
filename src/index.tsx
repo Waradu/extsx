@@ -1,31 +1,58 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import Template from "./template";
 import path from "path";
-import type { Express, Request, Response, NextFunction } from "express";
+import express, {
+  type Express,
+  type Request,
+  type Response,
+  type NextFunction,
+} from "express";
 import { Readable } from "stream";
 
 type KeyValue = { [key: string]: any };
 
-interface Options {
-  app?: KeyValue;
-  template?: string;
+export interface Config extends KeyValue {
+  head?: {
+    title?: string;
+    scripts?: {
+      src?: string;
+      charset?: string;
+      srcContents?: string;
+      type?: string;
+      async?: boolean;
+      defer?: boolean;
+    }[];
+    metas?: any[];
+    styles?: { style?: string; src?: string; type?: string }[];
+  };
 }
 
-type TemplateProps = {
-  App: React.ReactElement;
+interface Options {
+  template?: string | false;
+  config?: Config;
+}
+
+interface TemplateProps {
+  children: React.ReactElement;
+  config?: KeyValue;
   [key: string]: any;
-};
+}
 
 interface SetupOptions {
-  template?: string;
+  template?: string | false;
   templatePath?: string;
   viewPath?: string;
+  errorView?: string;
   stream?: boolean;
+  publicPath?: string;
+  globalConfig?: Config;
 }
 
 const defaultOptions: SetupOptions = {
   templatePath: "templates",
   viewPath: "views",
+  publicPath: "public",
+  errorView: "error",
   stream: true,
 };
 
@@ -33,6 +60,8 @@ interface IntSetupOptions extends SetupOptions {
   templatePath: string;
   viewPath: string;
   stream: boolean;
+  publicPath: string;
+  errorView: string;
 }
 
 const load = <T extends any>(path: string) => {
@@ -82,14 +111,14 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
       const encoder = new TextEncoder();
       const encoded = encoder.encode(html);
 
-      return Readable.from(encoded);
+      return Readable.from(Buffer.from(encoded));
     };
 
     res.renderTsx = (view: string, data?: KeyValue, options?: Options) => {
       res.set("Content-Type", "text/html");
 
-      let CustomTemplate: React.ComponentType<TemplateProps> | undefined =
-        Template;
+      let CustomTemplate: React.ComponentType<TemplateProps> =
+        Template as React.ComponentType<TemplateProps>;
 
       try {
         const Component = load(
@@ -138,15 +167,31 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
           CustomTemplate = template;
         }
 
+        const config = {
+          ...(intSetupOptions?.globalConfig || {}),
+          ...(options?.config || {}),
+        };
+
         StreamToClient(
           render(
-            <CustomTemplate {...options?.app} App={<Component {...data} />} />
+            (intSetupOptions.template == false && !options?.template) ||
+              options?.template == false ? (
+              <Component {...data} />
+            ) : (
+              <CustomTemplate config={config}>
+                <Component {...data} />
+              </CustomTemplate>
+            )
           )
         );
       } catch (error: any) {
-        if (view != "error") {
+        if (view != intSetupOptions.errorView) {
           const Component = load<{ error: any }>(
-            path.join(process.cwd(), intSetupOptions.viewPath, "error")
+            path.join(
+              process.cwd(),
+              intSetupOptions.viewPath,
+              intSetupOptions.errorView
+            )
           );
 
           if (Component) {
@@ -162,8 +207,30 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
   };
 
   app.use(middleware);
+  app.use(express.static(path.join(process.cwd(), intSetupOptions.publicPath)));
+};
+
+interface CreateConfig {
+  title?: string;
+  styles?: string[];
+  scripts?: string[];
+}
+
+export const config = (config: CreateConfig) => {
+  return {
+    head: {
+      title: config.title,
+      styles: config.styles?.map((s) => ({
+        src: s,
+      })),
+      scripts: config.scripts?.map((s) => ({
+        src: s,
+      })),
+    },
+  } as Config;
 };
 
 export default {
   use,
+  config,
 };

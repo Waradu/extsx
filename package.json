@@ -3,7 +3,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "scripts": {
     "build": "tsc",
     "pub": "bun run build && bun publish"
@@ -17,6 +17,7 @@
   "license": "MIT",
   "description": "TSX express rendering engine",
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/react-dom": "^19.0.4",
     "@types/bun": "latest"
   },
@@ -24,7 +25,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@types/express": "^5.0.0",
+    "express": "5.0.1",
     "react-dom": "^19.0.0"
   }
 }
