@@ -1,12 +1,11 @@
 import { renderToStaticMarkup } from "react-dom/server";
 
-export default async (
-  view: string,
-  options: Record<string, any>,
-  callback: (err?: Error | null, html?: string) => void
-) => {
-  const html =
-    "<!DOCTYPE html>\n" +
-    renderToStaticMarkup((await import(view)).default(options));
-  return callback(null, html);
+export default async (view: string, options: any, callback: (err: any, html?: string) => void) => {
+  try {
+    const Component = require(view).default;
+    const html = "<!DOCTYPE html>\n" + renderToStaticMarkup(Component(options));
+    return callback(null, html);
+  } catch (err) {
+    return callback(err);
+  }
 };
