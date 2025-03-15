@@ -5,8 +5,7 @@
   "type": "module",
   "version": "0.1.0",
   "scripts": {
-    "build": "bun build index.ts --outdir dist --target bun --mininfy && tsc",
-    "publish": "bun run build && bun publish"
+    "build": "tsc"
   },
   "keywords": [
     "tsx",
