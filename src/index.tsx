@@ -8,6 +8,10 @@ import express, {
   type NextFunction,
 } from "express";
 import { Readable } from "stream";
+import _ from "lodash";
+import { register } from "esbuild-register/dist/node";
+
+register();
 
 type KeyValue = { [key: string]: any };
 
@@ -38,6 +42,8 @@ interface TemplateProps {
   [key: string]: any;
 }
 
+type Languages = "tsx" | "jsx";
+
 interface SetupOptions {
   template?: string | false;
   templatePath?: string;
@@ -46,6 +52,7 @@ interface SetupOptions {
   stream?: boolean;
   publicPath?: string | false;
   globalConfig?: Config;
+  language?: Languages;
 }
 
 const defaultOptions: SetupOptions = {
@@ -54,6 +61,7 @@ const defaultOptions: SetupOptions = {
   publicPath: "public",
   errorView: "error",
   stream: true,
+  language: "tsx",
 };
 
 interface IntSetupOptions extends SetupOptions {
@@ -62,15 +70,8 @@ interface IntSetupOptions extends SetupOptions {
   stream: boolean;
   publicPath: string | false;
   errorView: string;
+  language: Languages;
 }
-
-const load = <T extends any>(path: string) => {
-  try {
-    return require(path).default as React.ComponentType<T>;
-  } catch {
-    return undefined;
-  }
-};
 
 declare global {
   namespace Express {
@@ -81,10 +82,22 @@ declare global {
 }
 
 export const use = (app: Express, setupOptions?: SetupOptions) => {
-  const intSetupOptions = {
-    ...defaultOptions,
-    ...setupOptions,
-  } as IntSetupOptions;
+  const intSetupOptions = _.merge(
+    {},
+    defaultOptions,
+    setupOptions
+  ) as IntSetupOptions;
+
+  const load = async <T extends any>(path: string) => {
+    try {
+      const componentPath = path + "." + intSetupOptions.language;
+      const component = require(componentPath);
+      return component.default as React.ComponentType<T>;
+    } catch (e) {
+      console.error(e);
+      return undefined;
+    }
+  };
 
   const middleware = (req: Request, res: Response, next: NextFunction) => {
     const StreamToClient = (stream: NodeJS.ReadableStream) => {
@@ -114,14 +127,18 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
       return Readable.from(Buffer.from(encoded));
     };
 
-    res.renderTsx = (view: string, data?: KeyValue, options?: Options) => {
+    res.renderTsx = async (
+      view: string,
+      data?: KeyValue,
+      options?: Options
+    ) => {
       res.set("Content-Type", "text/html");
 
       let CustomTemplate: React.ComponentType<TemplateProps> =
         Template as React.ComponentType<TemplateProps>;
 
       try {
-        const Component = load(
+        const Component = await load(
           path.join(process.cwd(), intSetupOptions.viewPath, view)
         );
 
@@ -132,7 +149,7 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
         }
 
         if (intSetupOptions.template && !options?.template) {
-          const template = load<TemplateProps>(
+          const template = await load<TemplateProps>(
             path.join(
               process.cwd(),
               intSetupOptions.templatePath,
@@ -150,7 +167,7 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
         }
 
         if (options?.template) {
-          const template = load<TemplateProps>(
+          const template = await load<TemplateProps>(
             path.join(
               process.cwd(),
               intSetupOptions.templatePath!,
@@ -186,7 +203,7 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
         );
       } catch (error: any) {
         if (view != intSetupOptions.errorView) {
-          const Component = load<{ error: any }>(
+          const Component = await load<{ error: any }>(
             path.join(
               process.cwd(),
               intSetupOptions.viewPath,
@@ -196,6 +213,7 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
 
           if (Component) {
             StreamToClient(render(<Component error={error} />));
+            return;
           }
         }
 
