@@ -24,7 +24,6 @@ const defaultOptions: SetupOptions = {
   viewPath: "views",
   publicPath: "public",
   errorView: "error",
-  stream: true,
   language: "tsx",
   onError: (error: any, res: Response) => {
     console.error(error);

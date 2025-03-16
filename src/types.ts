@@ -56,7 +56,6 @@ export interface SetupOptions {
   templatePath?: string;
   viewPath?: string;
   errorView?: string;
-  stream?: boolean;
   publicPath?: string | false;
   globalConfig?: Config;
   language?: Languages;
@@ -66,7 +65,6 @@ export interface SetupOptions {
 export interface IntSetupOptions extends SetupOptions {
   templatePath: string;
   viewPath: string;
-  stream: boolean;
   publicPath: string | false;
   errorView: string;
   language: Languages;
