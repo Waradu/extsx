@@ -119,10 +119,11 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
           CustomTemplate = template;
         }
 
-        const config = {
-          ...(intSetupOptions?.globalConfig || {}),
-          ...(options?.config || {}),
-        };
+        const config = _.merge(
+          {},
+          intSetupOptions?.globalConfig,
+          options?.config
+        );
 
         StreamToClient(
           Render(
