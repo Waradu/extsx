@@ -5,7 +5,7 @@ Extsx (pronounced 'ecstesyx') is a TSX/JSX rendering engine for express.
 ## install
 
 ```bash
-bun install extsx
+bun install extsx react-dom
 bun install @types/react-dom # if you are working with tsx instead of jsx
 ```
 
