@@ -17,10 +17,10 @@
   "license": "MIT",
   "description": "TSX express rendering engine",
   "devDependencies": {
-    "@types/lodash": "^4.17.16",
+    "@types/bun": "latest",
     "@types/express": "^5.0.0",
-    "@types/react-dom": "^19.0.4",
-    "@types/bun": "latest"
+    "@types/lodash": "^4.17.16",
+    "@types/react-dom": "^19.0.4"
   },
   "peerDependencies": {
     "typescript": "^5.8.2"
@@ -28,7 +28,6 @@
   "dependencies": {
     "esbuild-register": "^3.6.0",
     "express": "5.0.1",
-    "lodash": "^4.17.21",
-    "react-dom": "^19.0.0"
+    "lodash": "^4.17.21"
   }
 }

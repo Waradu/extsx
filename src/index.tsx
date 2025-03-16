@@ -1,5 +1,4 @@
-import { renderToStaticMarkup } from "react-dom/server";
-import Template from "./template";
+import Template from "./templates/Base";
 import path from "path";
 import express, {
   type Express,
@@ -7,53 +6,18 @@ import express, {
   type Response,
   type NextFunction,
 } from "express";
-import { Readable } from "stream";
 import _ from "lodash";
 import { register } from "esbuild-register/dist/node";
+import type {
+  IntSetupOptions,
+  KeyValue,
+  Options,
+  SetupOptions,
+  TemplateProps,
+} from "./types";
+import { Render, config } from "./utils";
 
 register();
-
-type KeyValue = { [key: string]: any };
-
-export interface Config extends KeyValue {
-  head?: {
-    title?: string;
-    scripts?: {
-      src?: string;
-      charset?: string;
-      srcContents?: string;
-      type?: string;
-      async?: boolean;
-      defer?: boolean;
-    }[];
-    metas?: any[];
-    styles?: { style?: string; src?: string; type?: string }[];
-  };
-}
-
-interface Options {
-  template?: string | false;
-  config?: Config;
-}
-
-interface TemplateProps {
-  children: React.ReactElement;
-  config?: KeyValue;
-  [key: string]: any;
-}
-
-type Languages = "tsx" | "jsx";
-
-interface SetupOptions {
-  template?: string | false;
-  templatePath?: string;
-  viewPath?: string;
-  errorView?: string;
-  stream?: boolean;
-  publicPath?: string | false;
-  globalConfig?: Config;
-  language?: Languages;
-}
 
 const defaultOptions: SetupOptions = {
   templatePath: "templates",
@@ -64,24 +28,7 @@ const defaultOptions: SetupOptions = {
   language: "tsx",
 };
 
-interface IntSetupOptions extends SetupOptions {
-  templatePath: string;
-  viewPath: string;
-  stream: boolean;
-  publicPath: string | false;
-  errorView: string;
-  language: Languages;
-}
-
-declare global {
-  namespace Express {
-    interface Response {
-      renderTsx(view: string, data?: KeyValue, options?: Options): void;
-    }
-  }
-}
-
-export const use = (app: Express, setupOptions?: SetupOptions) => {
+const use = (app: Express, setupOptions?: SetupOptions) => {
   const intSetupOptions = _.merge(
     {},
     defaultOptions,
@@ -109,22 +56,9 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
       });
     };
 
-    const StringToClient = (str: string) => {
-      return res.send(str);
-    };
-
     const ErrorToClient = (error: any) => {
       console.error(error);
       res.send("An Error occured");
-    };
-
-    const render = (component: React.ReactNode) => {
-      const html = "<!DOCTYPE html>" + renderToStaticMarkup(component);
-
-      const encoder = new TextEncoder();
-      const encoded = encoder.encode(html);
-
-      return Readable.from(Buffer.from(encoded));
     };
 
     res.renderTsx = async (
@@ -190,7 +124,7 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
         };
 
         StreamToClient(
-          render(
+          Render(
             (intSetupOptions.template == false && !options?.template) ||
               options?.template == false ? (
               <Component {...data} />
@@ -212,7 +146,7 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
           );
 
           if (Component) {
-            StreamToClient(render(<Component error={error} />));
+            StreamToClient(Render(<Component error={error} />));
             return;
           }
         }
@@ -230,26 +164,6 @@ export const use = (app: Express, setupOptions?: SetupOptions) => {
       express.static(path.join(process.cwd(), intSetupOptions.publicPath))
     );
   }
-};
-
-interface CreateConfig {
-  title?: string;
-  styles?: string[];
-  scripts?: string[];
-}
-
-export const config = (config: CreateConfig) => {
-  return {
-    head: {
-      title: config.title,
-      styles: config.styles?.map((s) => ({
-        src: s,
-      })),
-      scripts: config.scripts?.map((s) => ({
-        src: s,
-      })),
-    },
-  } as Config;
 };
 
 export default {
