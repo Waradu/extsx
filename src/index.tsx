@@ -137,7 +137,10 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
           )
         );
       } catch (error: any) {
-        if (view != intSetupOptions.errorView) {
+        if (
+          !(intSetupOptions.errorView == false) &&
+          view != intSetupOptions.errorView
+        ) {
           const Component = await load<{ error: any }>(
             path.join(
               process.cwd(),

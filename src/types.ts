@@ -55,7 +55,7 @@ export interface SetupOptions {
   template?: string | false;
   templatePath?: string;
   viewPath?: string;
-  errorView?: string;
+  errorView?: string | false;
   publicPath?: string | false;
   globalConfig?: Config;
   language?: Languages;
@@ -66,7 +66,7 @@ export interface IntSetupOptions extends SetupOptions {
   templatePath: string;
   viewPath: string;
   publicPath: string | false;
-  errorView: string;
+  errorView: string | false;
   language: Languages;
   onError: (error: any, res: Response) => void;
 }
@@ -83,4 +83,5 @@ export interface CreateConfig {
   title?: string;
   styles?: string[];
   scripts?: string[];
+  metas?: { name: string; content: string }[];
 }
