@@ -88,7 +88,7 @@ it is recommended to implement the template config in your own template like fol
 
 ```tsx
 import type { Config } from "extsx/dist/types";
-import { Head } from "extsx/templates/Head";
+import Head from "extsx/dist/templates/Head";
 
 const Template = ({
   children,
