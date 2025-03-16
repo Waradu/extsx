@@ -26,6 +26,10 @@ const defaultOptions: SetupOptions = {
   errorView: "error",
   stream: true,
   language: "tsx",
+  onError: (error: any, res: Response) => {
+    console.error(error);
+    res.send("An Error occured");
+  },
 };
 
 const use = (app: Express, setupOptions?: SetupOptions) => {
@@ -56,10 +60,7 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
       });
     };
 
-    const ErrorToClient = (error: any) => {
-      console.error(error);
-      res.send("An Error occured");
-    };
+    const ErrorToClient = (error: any) => intSetupOptions.onError(error, res);
 
     res.renderTsx = async (
       view: string,

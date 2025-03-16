@@ -1,3 +1,5 @@
+import type { Response } from "express";
+
 export type KeyValue = { [key: string]: any };
 
 export interface Meta extends KeyValue {
@@ -58,6 +60,7 @@ export interface SetupOptions {
   publicPath?: string | false;
   globalConfig?: Config;
   language?: Languages;
+  onError?: (error: any, res: Response) => void;
 }
 
 export interface IntSetupOptions extends SetupOptions {
@@ -67,6 +70,7 @@ export interface IntSetupOptions extends SetupOptions {
   publicPath: string | false;
   errorView: string;
   language: Languages;
+  onError: (error: any, res: Response) => void;
 }
 
 declare global {
