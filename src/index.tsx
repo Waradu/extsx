@@ -118,10 +118,15 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
           CustomTemplate = template;
         }
 
-        const config = _.merge(
+        const config = _.mergeWith(
           {},
           intSetupOptions?.globalConfig,
-          options?.config
+          options?.config,
+          (objValue: any, srcValue: any) => {
+            if (Array.isArray(objValue)) {
+              return objValue.concat(srcValue);
+            }
+          }
         );
 
         StreamToClient(
