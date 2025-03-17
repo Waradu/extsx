@@ -39,7 +39,13 @@ export interface Config extends KeyValue {
 }
 
 export interface Options {
+  /**
+   * Default template to use, uses the extsx tempalte if undefined. false to disable
+   */
   template?: string | false;
+  /**
+   * Template config like head, bodyAttrs and htmlAttrs
+   */
   config?: Config;
 }
 
@@ -52,13 +58,37 @@ export interface TemplateProps {
 export type Languages = "tsx" | "jsx";
 
 export interface SetupOptions {
+  /**
+   * Default template to use, uses the extsx tempalte if undefined. false to disable
+   */
   template?: string | false;
+  /**
+   * Templates path
+   */
   templatePath?: string;
+  /**
+   * Views path
+   */
   viewPath?: string;
+  /**
+   * Custom error view name, false to disable the error view
+   */
   errorView?: string | false;
+  /**
+   * Path to public folder path for css, images etc. false to disable
+   */
   publicPath?: string | false;
+  /**
+   * Default template config like head, bodyAttrs and htmlAttrs
+   */
   globalConfig?: Config;
+  /**
+   * Component language "tsx" or "jsx"
+   */
   language?: Languages;
+  /**
+   * 
+   */
   onError?: (error: any, res: Response) => void;
 }
 
@@ -74,14 +104,36 @@ export interface IntSetupOptions extends SetupOptions {
 declare global {
   namespace Express {
     interface Response {
+      /**
+       * Renders a TSX view with the provided data and options.
+       *
+       * @param {string} view - The name of the TSX view to render.
+       * @param {KeyValue} [data] - Data to pass to the view.
+       * @param {Options} [options] - Optional rendering options.
+       *
+       * @example
+       * renderTsx("index", { userName: "Waradu" });
+       */
       renderTsx(view: string, data?: KeyValue, options?: Options): void;
     }
   }
 }
 
 export interface CreateConfig {
+  /**
+   * The The title of the document.
+   */
   title?: string;
+  /**
+   * Array of css file paths.
+   */
   styles?: string[];
+  /**
+   * Array of script file paths.
+   */
   scripts?: string[];
+  /**
+   * Array of meta tags.
+   */
   metas?: { name: string; content: string }[];
 }

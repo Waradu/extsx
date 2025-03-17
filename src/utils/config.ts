@@ -1,5 +1,19 @@
 import type { Config, CreateConfig } from "../types";
 
+/**
+ * Creates a configuration object based on the provided input.
+ *
+ * @param {CreateConfig} config - The configuration input.
+ * @returns {Config} The generated configuration object.
+ *
+ * @example
+ * const conf = config({
+ *   title: "My Page",
+ *   styles: ["/styles.css"],
+ *   scripts: ["/script.js"],
+ *   metas: [{ name: "description", content: "My website" }]
+ * });
+ */
 export const config = (config: CreateConfig): Config => {
   const conf: Config = {
     head: {
