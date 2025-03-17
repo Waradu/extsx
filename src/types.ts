@@ -87,7 +87,7 @@ export interface SetupOptions {
    */
   language?: Languages;
   /**
-   * 
+   * Called if no error template is specified or error template has an error
    */
   onError?: (error: any, res: Response) => void;
 }
@@ -136,4 +136,11 @@ export interface CreateConfig {
    * Array of meta tags.
    */
   metas?: { name: string; content: string }[];
+  /**
+   * Custom Favicon
+   */
+  favIcon?: {
+    href: string;
+    type?: string;
+  };
 }

@@ -84,7 +84,7 @@ extsx.use(app, {
 });
 ```
 
-it is recommended to implement the template config in your own template like following:
+For custom templates it is recommended to implement the config like following (children and config parameters are required):
 
 ```tsx
 import type { Config } from "extsx/dist/types";
@@ -108,7 +108,7 @@ const Template = ({
 export default Template;
 ```
 
-A custom error page should look like:
+A custom error page should look like (error parameter is required):
 
 ```tsx
 const Error = ({ error }: { error: Error }) => {

@@ -18,5 +18,13 @@ export const config = (config: CreateConfig): Config => {
     },
   };
 
+  if (config.favIcon && conf.head?.links) {
+    conf.head.links.push({
+      rel: "icon",
+      href: config.favIcon.href,
+      type: config.favIcon.type,
+    });
+  }
+
   return conf;
 };

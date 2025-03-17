@@ -10,12 +10,7 @@ const Template = ({ head }: { head?: Head }) => {
       ))}
 
       {head?.links?.map((link, index) => (
-        <link
-          key={index}
-          rel={link.rel}
-          href={link.href}
-          type={link.type}
-        />
+        <link key={index} rel={link.rel} href={link.href} type={link.type} />
       ))}
 
       {head?.scripts?.map((script, index) =>
