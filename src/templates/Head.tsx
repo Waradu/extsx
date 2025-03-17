@@ -9,20 +9,14 @@ const Template = ({ head }: { head?: Head }) => {
         <meta key={index} {...meta} />
       ))}
 
-      {head?.styles?.map((style, index) =>
-        style.src ? (
-          <link
-            key={index}
-            rel="stylesheet"
-            href={style.src}
-            type={style.type || "text/css"}
-          />
-        ) : style.style ? (
-          <style key={index} type={style.type || "text/css"}>
-            {style.style}
-          </style>
-        ) : null
-      )}
+      {head?.links?.map((link, index) => (
+        <link
+          key={index}
+          rel={link.rel}
+          href={link.href}
+          type={link.type}
+        />
+      ))}
 
       {head?.scripts?.map((script, index) =>
         script.src ? (

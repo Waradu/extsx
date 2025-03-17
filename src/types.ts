@@ -19,9 +19,9 @@ export interface Scripts {
   defer?: boolean;
 }
 
-export interface Styles {
-  style?: string;
-  src?: string;
+export interface Links {
+  rel?: string;
+  href?: string;
   type?: string;
 }
 
@@ -29,7 +29,7 @@ export interface Head extends KeyValue {
   title?: string;
   scripts?: Scripts[];
   metas?: Meta[];
-  styles?: Styles[];
+  links?: Links[];
 }
 
 export interface Config extends KeyValue {

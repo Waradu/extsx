@@ -4,8 +4,9 @@ export const config = (config: CreateConfig): Config => {
   const conf: Config = {
     head: {
       title: config.title,
-      styles: config.styles?.map((s) => ({
-        src: s,
+      links: config.styles?.map((s) => ({
+        href: s,
+        rel: "stylesheet",
       })),
       scripts: config.scripts?.map((s) => ({
         src: s,
