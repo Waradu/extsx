@@ -31,35 +31,6 @@ const defaultOptions: SetupOptions = {
   },
 };
 
-/**
- * Sets up the extsx app with the provided configuration.
- *
- * @param {Express} app - The Express app instance.
- * @param {SetupOptions} [setupOptions] - Optional setup configuration.
- * @param {string | false} [setupOptions.template] - Default template to use. If `undefined`, the default extsx template is used. Set to `false` to disable templates.
- * @param {string} [setupOptions.templatePath="templates"] - Path to the templates folder.
- * @param {string} [setupOptions.viewPath="views"] - Path to the views folder.
- * @param {string | false} [setupOptions.errorView="error"] - Name of the custom error view. Set to `false` to disable error view.
- * @param {string | false} [setupOptions.publicPath="public"] - Path to the public folder (for CSS, images, etc.). Set to `false` to disable.
- * @param {Object} [setupOptions.globalConfig] - Default template configuration (e.g., head, bodyAttrs, and htmlAttrs).
- * @param {"tsx" | "jsx"} [setupOptions.language="tsx"] - Component language. Can be `"tsx"` or `"jsx"`.
- * @param {(error: Error, res: Response) => void} [setupOptions.onError] - Called if no error template is specified or if an error occurs in the error template.
- *
- * @example
- * extsx.use(app, {
- *   template: undefined,
- *   templatePath: "templates",
- *   viewPath: "views",
- *   errorView: "error",
- *   publicPath: "public",
- *   globalConfig: {},
- *   language: "tsx",
- *   onError: (error, res) => {
- *     console.error(error);
- *     res.send("An Error occurred");
- *   },
- * });
- */
 const use = (app: Express, setupOptions?: SetupOptions) => {
   const intSetupOptions = _.merge(
     {},
@@ -205,6 +176,41 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
 };
 
 export default {
+  /**
+   * Sets up the extsx app with the provided configuration.
+   *
+   * @param {Express} app - The Express app instance.
+   * @param {SetupOptions} [setupOptions] - Optional setup configuration.
+   *
+   * @example
+   * extsx.use(app, {
+   *   template: undefined,
+   *   templatePath: "templates",
+   *   viewPath: "views",
+   *   errorView: "error",
+   *   publicPath: "public",
+   *   globalConfig: {},
+   *   language: "tsx",
+   *   onError: (error, res) => {
+   *     console.error(error);
+   *     res.send("An Error occurred");
+   *   },
+   * });
+   */
   use,
+  /**
+   * Creates a configuration object based on the provided input.
+   *
+   * @param {CreateConfig} config - The configuration input.
+   * @returns {Config} The generated configuration object.
+   *
+   * @example
+   * const conf = config({
+   *   title: "My Page",
+   *   styles: ["/styles.css"],
+   *   scripts: ["/script.js"],
+   *   metas: [{ name: "description", content: "My website" }]
+   * });
+   */
   config,
 };
