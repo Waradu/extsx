@@ -9,6 +9,7 @@ import express, {
 import _ from "lodash";
 import { register } from "esbuild-register/dist/node";
 import type {
+  Config,
   IntSetupOptions,
   KeyValue,
   Options,
@@ -37,6 +38,20 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
     defaultOptions,
     setupOptions
   ) as IntSetupOptions;
+
+  const defaultConfig: Config = {
+    head: {
+      metas: [
+        {
+          charSet: "UTF-8",
+        },
+        {
+          name: "viewport",
+          content: "width=device-width, initial-scale=1.0",
+        },
+      ],
+    },
+  };
 
   const load = async <T extends any>(path: string) => {
     try {
@@ -119,7 +134,7 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
         }
 
         const config = _.mergeWith(
-          {},
+          defaultConfig,
           intSetupOptions?.globalConfig,
           options?.config,
           (objValue: any, srcValue: any) => {
@@ -155,7 +170,13 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
           );
 
           if (Component) {
-            StreamToClient(Render(<Component error={error} />));
+            StreamToClient(
+              Render(
+                <Template config={defaultConfig}>
+                  <Component error={error} />
+                </Template>
+              )
+            );
             return;
           }
         }
