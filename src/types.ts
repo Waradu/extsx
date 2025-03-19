@@ -5,15 +5,14 @@ export type KeyValue = { [key: string]: any };
 export interface Meta extends KeyValue {
   name?: string;
   content?: string;
-  charset?: string;
+  charSet?: string;
   httpEquiv?: string;
   property?: string;
 }
 
 export interface Scripts {
-  src?: string;
+  src: string;
   charset?: string;
-  srcContents?: string;
   type?: string;
   async?: boolean;
   defer?: boolean;
