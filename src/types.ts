@@ -82,6 +82,10 @@ export interface SetupOptions {
    */
   globalConfig?: Config;
   /**
+   * Default view data
+   */
+  globalData?: KeyValue;
+  /**
    * Component language "tsx" or "jsx"
    */
   language?: Languages;

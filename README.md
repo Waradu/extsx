@@ -74,6 +74,8 @@ extsx.use(app, {
   publicPath: "public",
   /* default template config like head, bodyAttrs and htmlAttrs */
   globalConfig: {},
+  /* default view data */
+  globalData: {},
   /* component language "tsx" or "jsx" */
   language: "tsx",
   /* called if no error template is specified or error template has an error */

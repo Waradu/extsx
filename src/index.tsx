@@ -145,14 +145,25 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
           }
         );
 
+        const viewData = _.mergeWith(
+          {},
+          setupOptions?.globalData,
+          data,
+          (objValue: any, srcValue: any) => {
+            if (Array.isArray(objValue)) {
+              return objValue.concat(srcValue);
+            }
+          }
+        );
+
         StreamToClient(
           Render(
             (intSetupOptions.template == false && !options?.template) ||
               options?.template == false ? (
-              <Component {...data} />
+              <Component {...viewData} />
             ) : (
               <CustomTemplate config={config}>
-                <Component {...data} />
+                <Component {...viewData} />
               </CustomTemplate>
             )
           )
@@ -212,6 +223,7 @@ export default {
    *   errorView: "error",
    *   publicPath: "public",
    *   globalConfig: {},
+   *   globalData: {},
    *   language: "tsx",
    *   onError: (error, res) => {
    *     console.error(error);
@@ -231,7 +243,8 @@ export default {
    *   title: "My Page",
    *   styles: ["/styles.css"],
    *   scripts: ["/script.js"],
-   *   metas: [{ name: "description", content: "My website" }]
+   *   metas: [{ name: "description", content: "My website" }],
+   *   favIcon: { href: "favicon.ico" }
    * });
    */
   config,
