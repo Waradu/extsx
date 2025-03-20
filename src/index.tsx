@@ -1,4 +1,4 @@
-import Template from "./templates/Base";
+import Template from "./templates/Base.js";
 import path from "path";
 import express, {
   type Express,
@@ -16,7 +16,8 @@ import type {
   SetupOptions,
   TemplateProps,
 } from "./types";
-import { Render, config } from "./utils";
+import { Render } from "./utils/render.js";
+import { config } from "./utils/config.js";
 
 register();
 

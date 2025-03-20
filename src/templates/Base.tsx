@@ -1,5 +1,5 @@
 import type { Config } from "../types";
-import Head from "./Head";
+import Head from "./Head.js";
 
 const Template = ({
   children,
