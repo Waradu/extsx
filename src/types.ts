@@ -1,8 +1,6 @@
 import type { Response } from "express";
 
-export type KeyValue = { [key: string]: any };
-
-export interface Meta extends KeyValue {
+export interface Meta extends Record<string, any> {
   name?: string;
   content?: string;
   charSet?: string;
@@ -24,17 +22,17 @@ export interface Links {
   type?: string;
 }
 
-export interface Head extends KeyValue {
+export interface Head extends Record<string, any> {
   title?: string;
   scripts?: Scripts[];
   metas?: Meta[];
   links?: Links[];
 }
 
-export interface Config extends KeyValue {
+export interface Config extends Record<string, any> {
   head?: Head;
-  bodyAttrs?: KeyValue;
-  htmlAttrs?: KeyValue;
+  bodyAttrs?: Record<string, any>;
+  htmlAttrs?: Record<string, any>;
 }
 
 export interface Options {
@@ -50,7 +48,7 @@ export interface Options {
 
 export interface TemplateProps {
   children: React.ReactElement;
-  config?: KeyValue;
+  config?: Record<string, any>;
   [key: string]: any;
 }
 
@@ -84,7 +82,7 @@ export interface SetupOptions {
   /**
    * Default view data
    */
-  globalData?: KeyValue;
+  globalData?: Record<string, any>;
   /**
    * Component language "tsx" or "jsx"
    */
@@ -111,13 +109,13 @@ declare global {
        * Renders a TSX view with the provided data and options.
        *
        * @param {string} view - The name of the TSX view to render.
-       * @param {KeyValue} [data] - Data to pass to the view.
+       * @param {Record<string, any>} [data] - Data to pass to the view.
        * @param {Options} [options] - Optional rendering options.
        *
        * @example
        * renderTsx("index", { userName: "Waradu" });
        */
-      renderTsx(view: string, data?: KeyValue, options?: Options): void;
+      renderTsx(view: string, data?: Record<string, any>, options?: Options): void;
     }
   }
 }

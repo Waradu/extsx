@@ -11,7 +11,6 @@ import { register } from "esbuild-register/dist/node";
 import type {
   Config,
   IntSetupOptions,
-  KeyValue,
   Options,
   SetupOptions,
   TemplateProps,
@@ -79,7 +78,7 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
 
     res.renderTsx = async (
       view: string,
-      data?: KeyValue,
+      data?: Record<string, any>,
       options?: Options
     ) => {
       res.set("Content-Type", "text/html");
