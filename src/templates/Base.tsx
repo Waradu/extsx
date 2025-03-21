@@ -1,4 +1,4 @@
-import type { Config } from "../types";
+import type { Config } from "../types.js";
 import Head from "./Head.js";
 
 const Template = ({

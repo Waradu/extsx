@@ -14,9 +14,17 @@ import type {
   Options,
   SetupOptions,
   TemplateProps,
-} from "./types";
+} from "./types.js";
 import { Render } from "./utils/render.js";
 import { config } from "./utils/config.js";
+import fs from "fs/promises";
+import { transform } from "esbuild";
+import { createRequire } from "module";
+import { pathToFileURL } from "url";
+const require = createRequire(import.meta.url);
+
+const jsxRuntimePath = require.resolve("react/jsx-runtime");
+const jsxRuntimeUrl = pathToFileURL(jsxRuntimePath).href;
 
 register();
 
@@ -56,7 +64,25 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
   const load = async <T extends any>(path: string) => {
     try {
       const componentPath = path + "." + intSetupOptions.language;
-      const component = require(componentPath);
+      const code = await fs.readFile(componentPath, "utf-8");
+
+      const result = await transform(code, {
+        loader: intSetupOptions.language,
+        target: "esnext",
+        format: "esm",
+        jsx: "automatic",
+        jsxImportSource: "react",
+      });
+
+      let transformedCode = result.code.replace(
+        /(["'])react\/jsx-runtime\1/g,
+        `"${jsxRuntimeUrl}"`
+      );
+
+      const componentUrl =
+        "data:text/javascript;base64," +
+        Buffer.from(transformedCode).toString("base64");
+      const component = await import(componentUrl);
       return component.default as React.ComponentType<T>;
     } catch (e) {
       console.error(e);

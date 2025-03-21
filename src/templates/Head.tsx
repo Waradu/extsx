@@ -1,4 +1,4 @@
-import type { Head } from "../types";
+import type { Head } from "../types.js";
 
 const Template = ({ head }: { head?: Head }) => {
   return (

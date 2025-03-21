@@ -1,4 +1,4 @@
-import type { Config, CreateConfig } from "../types";
+import type { Config, CreateConfig } from "../types.js";
 
 export const config = (config: CreateConfig): Config => {
   const conf: Config = {
