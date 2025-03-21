@@ -18,7 +18,7 @@ import type {
 import { Render } from "./utils/render.js";
 import { config } from "./utils/config.js";
 import fs from "fs/promises";
-import { transform } from "esbuild";
+import { build } from "esbuild";
 import { createRequire } from "module";
 import { pathToFileURL } from "url";
 const require = createRequire(import.meta.url);
@@ -61,29 +61,40 @@ const use = (app: Express, setupOptions?: SetupOptions) => {
     },
   };
 
-  const load = async <T extends any>(path: string) => {
+  const load = async <T extends any>(loadPath: string) => {
     try {
-      const componentPath = path + "." + intSetupOptions.language;
+      const componentPath = loadPath + "." + intSetupOptions.language;
       const code = await fs.readFile(componentPath, "utf-8");
 
-      const result = await transform(code, {
-        loader: intSetupOptions.language,
-        target: "esnext",
+      const result = await build({
+        entryPoints: [componentPath],
+        bundle: true,
         format: "esm",
+        target: "esnext",
         jsx: "automatic",
         jsxImportSource: "react",
+        external: ["react", "react/jsx-runtime"],
+        absWorkingDir: path.dirname(componentPath),
+        write: false,
       });
 
-      let transformedCode = result.code.replace(
+      if (!result.outputFiles || result.outputFiles.length === 0) {
+        throw new Error("esbuild did not produce any output files");
+      }
+
+      let transformedCode = result.outputFiles[0].text;
+
+      transformedCode = transformedCode.replace(
         /(["'])react\/jsx-runtime\1/g,
         `"${jsxRuntimeUrl}"`
       );
 
-      const componentUrl =
+      const dataUrl =
         "data:text/javascript;base64," +
         Buffer.from(transformedCode).toString("base64");
-      const component = await import(componentUrl);
-      return component.default as React.ComponentType<T>;
+
+      const module = await import(dataUrl);
+      return module.default as React.ComponentType<T>;
     } catch (e) {
       console.error(e);
       return undefined;
